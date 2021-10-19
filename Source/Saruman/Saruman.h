@@ -5,3 +5,11 @@
 #include "CoreMinimal.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(LogSaruman, Log, All);
+
+UENUM(BlueprintType)
+enum class ESarumanAbilityInputID : uint8 {
+    None,
+    Confirm,
+    Cancel,
+    Thunderbolt
+};
