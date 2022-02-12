@@ -54,6 +54,17 @@ ASarumanCharacter::ASarumanCharacter()
 	CursorToWorld->DecalSize = FVector(16.0f, 32.0f, 32.0f);
 	CursorToWorld->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f).Quaternion());
 
+	// Create a decal in the world to show the ability marker
+	CursorToWorldAbility = CreateDefaultSubobject<UDecalComponent>("CursorToWorldAbility");
+	CursorToWorldAbility->SetupAttachment(RootComponent);
+	if (DecalMaterialAsset.Succeeded())
+	{
+		CursorToWorldAbility->SetDecalMaterial(DecalMaterialAsset.Object);
+	}
+	CursorToWorldAbility->DecalSize = FVector(64.0f, 128.0f, 128.0f);
+	CursorToWorldAbility->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f).Quaternion());
+	CursorToWorldAbility->SetVisibility(false);
+
 	// Activate ticking in order to update the cursor every frame.
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
@@ -99,6 +110,7 @@ void ASarumanCharacter::Tick(float DeltaSeconds)
 				World->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_Visibility, Params);
 				FQuat SurfaceRotation = HitResult.ImpactNormal.ToOrientationRotator().Quaternion();
 				CursorToWorld->SetWorldLocationAndRotation(HitResult.Location, SurfaceRotation);
+				CursorToWorldAbility->SetWorldLocationAndRotation(HitResult.Location, SurfaceRotation);
 			}
 		}
 		else if (APlayerController* PC = Cast<APlayerController>(GetController()))
@@ -109,6 +121,8 @@ void ASarumanCharacter::Tick(float DeltaSeconds)
 			FRotator CursorR = CursorFV.Rotation();
 			CursorToWorld->SetWorldLocation(TraceHitResult.Location);
 			CursorToWorld->SetWorldRotation(CursorR);
+			CursorToWorldAbility->SetWorldLocation(TraceHitResult.Location);
+			CursorToWorldAbility->SetWorldRotation(CursorR);
 		}
 	}
 }
