@@ -13,6 +13,7 @@
 #include "AbilitySystemComponent.h"
 #include "SarumanAttributeSet.h"
 #include "Engine/World.h"
+#include "Saruman.h"
 
 ASarumanCharacter::ASarumanCharacter()
 {
@@ -61,7 +62,7 @@ ASarumanCharacter::ASarumanCharacter()
 	{
 		CursorToWorldAbility->SetDecalMaterial(DecalMaterialAsset.Object);
 	}
-	CursorToWorldAbility->DecalSize = FVector(64.0f, 128.0f, 128.0f);
+	CursorToWorldAbility->DecalSize = FVector(128.0f, 256.0f, 256.0f);
 	CursorToWorldAbility->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f).Quaternion());
 	CursorToWorldAbility->SetVisibility(false);
 
@@ -88,6 +89,10 @@ void ASarumanCharacter::BeginPlay()
 		GiveAbilities();
 		InitAttributes();
 		AbilitySystem->InitAbilityActorInfo(this, this);
+
+		if(InputComponent) {
+			AbilitySystem->BindAbilityActivationToInputComponent(InputComponent, FGameplayAbilityInputBinds(FString("Confirm"), FString("Cancel"), FString("ESarumanAbilityInputID"), static_cast<int32>(ESarumanAbilityInputID::Confirm), static_cast<int32>(ESarumanAbilityInputID::Cancel)));
+		}
 	}
 }
 
